@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import measurements_database
-from measurements_database import MeasurementsDataBase
+from measurements_database import *
 
 
 class Controller:
@@ -46,12 +46,11 @@ class Controller:
 
     def print_second_menu(self):
         print()
-        print("Wciśnij odpowedni klawisz i potwierdź enterem, żeby wybrać przedział czasu")
+        print("Wciśnij odpowedni klawisz i potwierdź enterem, żeby wybrać przedział czasu, w ktrorym chesz dokonac analizy")
         print("1 - rok")
         print("2 - miesiąc")
         print("3 - tydzień")
         print("4 - dzień")
-        print("q - wróć do poprzedniego menu")
 
     def add_new_measurement_console(self):
         """Asks user about measurement details and adds it to database.
@@ -62,8 +61,13 @@ class Controller:
         """
         sugar_string = input("Podaj wartość zmierzonego cukru ")
         measurement_date_string = input("Podaj date i godzine wykonania pomiaru, uźyj formatu 01.03.2022 15:34 ")
+        mode = input("Podaj czy pomiar był po jedzeniu czy na czczo, 1- po jedzieniu, 2- na czczo")
+        if mode == '1':
+            mode = "po jedzeniu"
+        else:
+            mode = "na czczo"
         try:
-            self.database.add_new_measurement(sugar_string, measurement_date_string)
+            self.database.add_new_measurement(sugar_string, measurement_date_string, mode)
         except ValueError:
             # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
             print("Podałeś dane w nieodpowiednim formacie")
@@ -73,9 +77,26 @@ class Controller:
 
         It also checks if there is enough data in the database to conduct the analysis
         """
-        measurement_date = datetime.strptime('31.01.2022 22:34', '%d.%m.%Y %H:%M')
-        self.database.find_measurements_from_period(1, measurement_date)
-        average, min_sugar, max_sugar = measurements_database.analise_measurements(self.database.measurements_list)
+        self.print_second_menu()
+        chosen_period = input("Podaj wybrana wartosc ")
+        measurement_date_string = input("Podaj startową date i godzine wykonania pomiaru, uźyj formatu 01.03.2022 15:34 ")
+        measurement_date = datetime.strptime(measurement_date_string, '%d.%m.%Y %H:%M')
+        mode = input("Podaj jakie pomiary chcesz analizowac 1- po jedzieniu, 2- na czczo, 3 - wszystkie")
+        measurements_list = self.database.measurements_list.copy()
+        if mode != '3':
+            if mode == '1':
+                measurements_list = find_measurements_with_specific_mode("po jedzeniu", measurements_list)
+            else:
+                measurements_list = find_measurements_with_specific_mode("na czczo", measurements_list)
+        if len(measurements_list) == 0:
+            print("Nie ma pomiarów o takich własnościach")
+            return
+        measurements_list = find_measurements_from_period(chosen_period, measurement_date, measurements_list)
+        if len(measurements_list) == 0:
+            print("Nie ma pomiarów o takich własnościach")
+            return
+        average, min_sugar, max_sugar = measurements_database.analise_measurements(measurements_list)
+        [print(i, end='\n') for i in measurements_list]
         print(f'average: {average}, min: {min_sugar}, max: {max_sugar}')
 
 
