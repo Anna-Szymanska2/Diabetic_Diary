@@ -2,6 +2,7 @@ from datetime import datetime
 
 import measurements_database
 from measurements_database import *
+from view import *
 
 
 class Controller:
@@ -86,8 +87,10 @@ class Controller:
         if mode != '3':
             if mode == '1':
                 measurements_list = find_measurements_with_specific_mode("po jedzeniu", measurements_list)
+                border_value = 140
             else:
                 measurements_list = find_measurements_with_specific_mode("na czczo", measurements_list)
+                border_value = 100
         if len(measurements_list) == 0:
             print("Nie ma pomiarów o takich własnościach")
             return
@@ -98,6 +101,9 @@ class Controller:
         average, min_sugar, max_sugar = measurements_database.analise_measurements(measurements_list)
         [print(i, end='\n') for i in measurements_list]
         print(f'average: {average}, min: {min_sugar}, max: {max_sugar}')
+        if mode != '3':
+            plot_histogram(return_sugar_values(measurements_list), border_value)
+
 
 
 
