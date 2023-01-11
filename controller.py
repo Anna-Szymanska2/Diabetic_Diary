@@ -99,7 +99,10 @@ class Controller:
             print("Nie ma pomiarów o takich własnościach")
             return
         average, min_sugar, max_sugar = measurements_database.analise_measurements(measurements_list)
+        measurements_list_sorted = return_sorted_chronologically(measurements_list)
         [print(i, end='\n') for i in measurements_list]
+        print("")
+        [print(i, end='\n') for i in measurements_list_sorted]
         print(f'average: {average}, min: {min_sugar}, max: {max_sugar}')
         if mode != '3':
             plot_histogram(return_sugar_values(measurements_list), border_value)

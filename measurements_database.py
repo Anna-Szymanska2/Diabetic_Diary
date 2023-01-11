@@ -51,6 +51,12 @@ def find_measurements_from_period(period, start_date, measurements_list):
     return measurements_from_period
 
 
+def return_sorted_chronologically(measurements_list):
+    measurements_list = measurements_list.copy()
+    measurements_list.sort(key=attrgetter('date'))
+    return measurements_list
+
+
 class MeasurementsDataBase:
 
     def __init__(self):
