@@ -80,7 +80,7 @@ class Controller:
         """
         self.print_second_menu()
         chosen_period = input("Podaj wybrana wartosc ")
-        measurement_date_string = input("Podaj startową date i godzine wykonania pomiaru, uźyj formatu 01.03.2022 15:34 ")
+        measurement_date_string = input("Podaj końcową date i godzine wykonania pomiaru, uźyj formatu 01.03.2022 15:34 ")
         measurement_date = datetime.strptime(measurement_date_string, '%d.%m.%Y %H:%M')
         mode = input("Podaj jakie pomiary chcesz analizowac 1- po jedzieniu, 2- na czczo, 3 - wszystkie")
         measurements_list = self.database.measurements_list.copy()

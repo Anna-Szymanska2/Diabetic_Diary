@@ -32,20 +32,20 @@ def find_measurements_with_specific_mode(mode, measurements_list):
     return measurements_with_specific_mode
 
 
-def find_measurements_from_period(period, start_date, measurements_list):
+def find_measurements_from_period(period, end_date, measurements_list):
     match period:
         case '1':
-            end_date = start_date + relativedelta(years=+1)
+            start_date = end_date + relativedelta(years=-1)
         case '2':
-            end_date = start_date + relativedelta(months=+1)
+            start_date = end_date + relativedelta(months=-1)
         case '3':
-            end_date = start_date + relativedelta(days=+7)
+            start_date = end_date + relativedelta(days=-7)
         case '4':
-            end_date = start_date + relativedelta(days=+1)
+            start_date = end_date + relativedelta(days=-1)
 
     measurements_from_period = []
     for measurement in measurements_list:
-        if start_date <= measurement.date < end_date:
+        if start_date < measurement.date <= end_date:
             measurements_from_period.append(measurement)
 
     return measurements_from_period
