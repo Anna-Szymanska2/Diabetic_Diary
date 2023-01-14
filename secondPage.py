@@ -74,7 +74,6 @@ class SecondPage(QWidget):
     def analise(self):
         period = self.combo_box_time.currentIndex() + 1
         mode = self.combo_box_mode.currentIndex() + 1
-        print(mode)
         end_date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
         measurements_list = self.controller.database.measurements_list.copy()
 
@@ -98,6 +97,7 @@ class SecondPage(QWidget):
         self.list_widget.clear()
         string_list = to_string_measurement_list(measurements_list_sorted)
         self.list_widget.addItems(string_list)
+        self.list_widget.setMinimumWidth(self.list_widget.sizeHintForColumn(0))
 
         self.avg_label.setText("Cukier średni: " + str(avg_sugar))
         self.min_label.setText("Cukier min: " + str(min_sugar))
