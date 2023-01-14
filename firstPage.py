@@ -1,43 +1,40 @@
 from PySide6.QtCore import QDate, QTime, QDateTime
 from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, \
-    QDateTimeEdit, QHBoxLayout
+    QDateTimeEdit, QHBoxLayout, QMessageBox
 
-
+import controller
 
 
 class FirstPage(QWidget):
     def __init__(self, controller):
         super().__init__()
+        self.controller = controller
 
         self.list_widget = QListWidget(self)
-        measurements_list = controller.database.measurements_list.copy()
-        string_list = []
-        for i in measurements_list:
-            string_list.append(" " * (len("Cukier ") - len(str(i.sugar))) + str(i.sugar) +
-                               " " * (len("Data wykonania pomiaru ") - len(str(i.date))) +
-                               str(i.date) + " " * (len("Tryb pomiaru ") - len(str(i.mode))) + str(i.mode))
+        string_list = self.controller.string_measurement_list()
 
         self.list_widget.addItems(string_list)
 
         sugar_label = QLabel("Poziom cukru: ")
-        line_edit = QLineEdit()
+        self.line_edit = QLineEdit()
 
         mode_label = QLabel("Tryb: ")
         self.combo_box = QComboBox(self)
         self.combo_box.addItem("Na czczo")
         self.combo_box.addItem("Po posiłku")
 
-        dateEdit = QDateTimeEdit(QDateTime.currentDateTime())
-        dateEdit.setMaximumDate(QDate.currentDate())
-        dateEdit.setMaximumTime(QTime.currentTime())
+        self.dateEdit = QDateTimeEdit(QDateTime.currentDateTime())
+        self.dateEdit.setMaximumDate(QDate.currentDate())
+        self.dateEdit.setMaximumTime(QTime.currentTime())
+        self.dateEdit.setDisplayFormat("dd.MM.yyyy hh:mm")
 
         h_layout = QHBoxLayout()
 
         h_layout.addWidget(sugar_label)
-        h_layout.addWidget(line_edit)
+        h_layout.addWidget(self.line_edit)
         h_layout.addWidget(mode_label)
         h_layout.addWidget(self.combo_box)
-        h_layout.addWidget(dateEdit)
+        h_layout.addWidget(self.dateEdit)
 
         button_add_item = QPushButton("Dodaj pomiar")
         button_add_item.clicked.connect(self.add_item)
@@ -58,10 +55,35 @@ class FirstPage(QWidget):
         self.setLayout(v_layout)
 
     def add_item(self):
-        self.list_widget.addItem("New Item")
+        length = len(self.controller.string_measurement_list().copy())
+        sugar = self.line_edit.text()
+        date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
+        mode = self.combo_box.currentIndex()
+
+        if mode == 1:
+            mode = "po jedzeniu"
+        else:
+            mode = "na czczo"
+        try:
+            s = self.controller.database.add_new_measurement(sugar, date, mode)
+            if len(self.controller.string_measurement_list().copy()) > length:
+                self.list_widget.clear()
+                string_list = self.controller.string_measurement_list()
+                self.list_widget.addItems(string_list)
+            self.show_message_box(" ", s)
+        except ValueError:
+            self.show_message_box("Błąd", "Podałeś dane w nieodpowiednim formacie")
 
     def delete_all_items(self):
-        print("Item count : ", self.list_widget.count())
+        ret = QMessageBox.question(self, "Message Title",
+                                   "Czy jesteś pewnien, że chcesz usunąć wszytkie pomiary?",
+                                   QMessageBox.Ok | QMessageBox.Cancel)
+        if ret == QMessageBox.Ok:
+            s = self.controller.database.clear_all_measurements
+            self.show_message_box(" ", s)
 
     def delete_item(self):
         self.list_widget.takeItem(self.list_widget.currentRow())
+
+    def show_message_box(self, title, value):
+        ret = QMessageBox.information(self, title, value)

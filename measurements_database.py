@@ -32,20 +32,21 @@ def find_measurements_with_specific_mode(mode, measurements_list):
     return measurements_with_specific_mode
 
 
-def find_measurements_from_period(period, start_date, measurements_list):
+def find_measurements_from_period(period, end_date, measurements_list):
+    end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     match period:
-        case '1':
-            end_date = start_date + relativedelta(years=+1)
-        case '2':
-            end_date = start_date + relativedelta(months=+1)
-        case '3':
-            end_date = start_date + relativedelta(days=+7)
-        case '4':
-            end_date = start_date + relativedelta(days=+1)
+        case 1:
+            start_date = end_date + relativedelta(years=-1)
+        case 2:
+            start_date = end_date + relativedelta(months=-1)
+        case 3:
+            start_date = end_date + relativedelta(days=-7)
+        case 4:
+            start_date = end_date + relativedelta(days=-1)
 
     measurements_from_period = []
     for measurement in measurements_list:
-        if start_date <= measurement.date < end_date:
+        if start_date < measurement.date <= end_date:
             measurements_from_period.append(measurement)
 
     return measurements_from_period
@@ -89,36 +90,34 @@ class MeasurementsDataBase:
         sugar = int(sugar)
         measurement_date = datetime.strptime(date, '%d.%m.%Y %H:%M')
         current_date = datetime.now()
+        s = " "
         if measurement_date > current_date:
             # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-            print("Data nie może być przyszła")
-            return
+            return "Data nie może być przyszła"
         if sugar > 400 or sugar < 10:
-            print("Podana przez Ciebie wartość nie jest możliwa, podany cukier musi mieścić się w przedziale <10,400>")
-            return
+            return "Podana przez Ciebie wartość nie jest możliwa, podany cukier musi mieścić się w przedziale <10,400>"
         if mode == "po jedzeniu":
             if sugar > 140:
                 # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-                print("To zbyt wysoki wynik, możesz mieć cukrzycę")
+               s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
         else:
             if sugar > 100:
                 # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-                print("To zbyt wysoki wynik, możesz mieć cukrzycę")
+                s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
         if sugar < 70:
             # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-            print("To zbyt niski wynik, możesz mieć cukrzycę")
+            s = "To zbyt niski wynik, możesz mieć cukrzycę"
 
         measurement = Measurement(sugar, measurement_date, mode)
         if any(x.date == measurement_date for x in self.measurements_list):
             # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-            print("W bazie danych istnieje już pomiar z taką datą, więc nie można go dodać")
-            return
+            return "W bazie danych istnieje już pomiar z taką datą, więc nie można go dodać"
         self.measurements_list.append(measurement)
         script = """INSERT INTO pomiary VALUES (?, ?, ?)"""
         self.conn.execute(script, (sugar, date, mode))
         self.conn.commit()
         # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
-        print("Podane przez Ciebie dane zostały dodane do bazy")
+        return s + "\n"+"Podane przez Ciebie dane zostały dodane do bazy"
 
     def delete_last_measurement(self):
         """A function that deletes recently added measurement from the database"""
@@ -133,7 +132,7 @@ class MeasurementsDataBase:
         self.c.execute('DELETE FROM pomiary')
         self.conn.commit()
         self.measurements_list.clear()
-        print('Baza danych została wyczyszczona')
+        return 'Baza danych została wyczyszczona'
 
 
 

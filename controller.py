@@ -5,6 +5,15 @@ from measurements_database import *
 from view import *
 
 
+def to_string_measurement_list(measurements_list):
+    string_list = []
+    for i in measurements_list:
+        string_list.append(" " * (len("Cukier ") - len(str(i.sugar))) + str(i.sugar) +
+                           " " * (len("Data wykonania pomiaru ") - len(str(i.date))) +
+                           str(i.date) + " " * (len("Tryb pomiaru ") - len(str(i.mode))) + str(i.mode))
+    return string_list
+
+
 class Controller:
     def __init__(self):
         self.database = MeasurementsDataBase()
@@ -107,7 +116,14 @@ class Controller:
         if mode != '3':
             plot_histogram(return_sugar_values(measurements_list), border_value)
 
-
+    def string_measurement_list(self):
+        measurements_list = self.database.measurements_list.copy()
+        string_list = []
+        for i in measurements_list:
+            string_list.append(" " * (len("Cukier ") - len(str(i.sugar))) + str(i.sugar) +
+                               " " * (len("Data wykonania pomiaru ") - len(str(i.date))) +
+                               str(i.date) + " " * (len("Tryb pomiaru ") - len(str(i.mode))) + str(i.mode))
+        return string_list
 
 
 

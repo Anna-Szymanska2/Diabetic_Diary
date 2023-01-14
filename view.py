@@ -26,4 +26,5 @@ def plot_histogram(sugar_values, border_value):
    # plt.xticks(x)
     #formatter = ticker.FormatStrFormatter('?%1.2f')
    # Axis.set_major_formatter(formatter)
-    plt.show()
+    #plt.show()
+    plt.savefig('plot.png')
