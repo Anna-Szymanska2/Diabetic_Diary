@@ -1,0 +1,6 @@
+Instrukcja uruchamiania:
+1. Rozpakować pobrany folder
+2. Pobrać wymagane biblioteki z requirements.txt
+3. Program można uruchomić za pomocą wiersza poleceń:
+   a) należy przenieść się do lokalizacji rozpakowanego folderu
+   b) następnie użyć komendy "python -m main"

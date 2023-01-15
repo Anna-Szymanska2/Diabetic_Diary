@@ -112,7 +112,7 @@ class MeasurementsDataBase:
         return s + "\n"+"Podane przez Ciebie dane zostały dodane do bazy"
 
     def clear_all_measurements(self):
-        """A function that deletes all the measurements from the database."""
+        """A function that deletes all the measurements from the database and the list."""
 
         self.c.execute('DELETE FROM pomiary')
         self.conn.commit()
