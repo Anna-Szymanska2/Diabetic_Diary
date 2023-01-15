@@ -8,6 +8,7 @@ def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
     while i <= 400:
         bins.append(i)
         i += 10
+    fig = plt.figure()
     n, bin1, patches = plt.hist(sugar_values, bins=bins, color="green", ec="black")
     for i in range(4):
         patches[i].set_fc("red")
@@ -20,6 +21,8 @@ def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
     plt.xlabel("Cukier mg/dl")
     plt.ylabel("Częstość")
     plt.legend([patches[0], patches[4], patches[6]], ["zagrożenie życia", "nieprawidłowy cukier", "prawidłowy cukier"])
+    fig.canvas.draw()
+    fig.canvas.flush_events()
     #nie wiem czy chcemy w ogole cos takiego wiec na razie nie poprawiam
     if mode == 2:
         mode = "na czczo"
