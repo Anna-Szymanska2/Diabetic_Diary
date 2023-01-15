@@ -9,7 +9,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.controller = Controller()
-        first_page = FirstPage(self.controller)
+        first_page = self.controller.first_page
 
         self.setWindowTitle("Dzienniczek diabetyka")
 
@@ -24,11 +24,11 @@ class MainWindow(QMainWindow):
         self.central_widget.addWidget(first_page)
 
     def measurements_action(self):
-        first_page = FirstPage(self.controller)
+        first_page = self.controller.first_page
         self.central_widget.addWidget(first_page)
         self.central_widget.setCurrentWidget(first_page)
 
     def analise_action(self):
-        second_page = SecondPage(self.controller)
+        second_page = self.controller.second_page
         self.central_widget.addWidget(second_page)
         self.central_widget.setCurrentWidget(second_page)

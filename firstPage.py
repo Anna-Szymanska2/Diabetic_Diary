@@ -7,13 +7,14 @@ from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QL
 from datetime import datetime
 
 
+
 class FirstPage(QWidget):
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
 
         self.list_widget = QListWidget(self)
-        string_list = self.controller.database.string_measurement_list()
+        string_list = controller.database.string_measurement_list()
 
         self.list_widget.addItems(string_list)
 

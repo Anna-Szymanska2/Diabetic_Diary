@@ -1,13 +1,14 @@
-from datetime import datetime
 
-import measurements_database
 from measurements_database import *
-from histogram import *
+from firstPage import FirstPage
+from secondPage import SecondPage
 
 
 class Controller:
     def __init__(self):
         self.database = MeasurementsDataBase()
+        self.first_page = FirstPage(self)
+        self.second_page = SecondPage(self)
 
     def string_measurement_list(self):
         measurements_list = self.database.measurements_list.copy()

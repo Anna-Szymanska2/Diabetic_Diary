@@ -8,7 +8,7 @@ from histogram import plot_histogram
 
 
 class SecondPage(QWidget):
-    def __init__(self, controller):
+    def __init__(self,controller):
         super().__init__()
         self.controller = controller
 
@@ -35,7 +35,7 @@ class SecondPage(QWidget):
         button_analise.clicked.connect(self.analise)
 
         self.list_widget = QListWidget(self)
-        string_list = self.controller.database.string_measurement_list()
+        string_list = controller.database.string_measurement_list()
 
         self.list_widget.addItems(string_list)
 
