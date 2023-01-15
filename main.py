@@ -9,8 +9,8 @@ from mainWindow import MainWindow
 import sys
 
 def main():
-    #controller = Controller()
-    #controller.main()
+    # controller = Controller()
+    # controller.main()
 
     app = QApplication(sys.argv)
 

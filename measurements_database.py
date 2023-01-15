@@ -134,6 +134,15 @@ class MeasurementsDataBase:
         self.measurements_list.clear()
         return 'Baza danych została wyczyszczona'
 
+    def delete_measurement_at_date(self, date):
+        self.c.execute(f'DELETE FROM pomiary WHERE measurement_date="{date}";')
+        self.conn.commit()
+        date = datetime.strptime(date, '%d.%m.%Y %H:%M')
+        for measurement in self.measurements_list:
+            if measurement.date == date:
+                measurement_to_remove = measurement
+        self.measurements_list.remove(measurement_to_remove)
+
 
 
 

@@ -90,31 +90,32 @@ class Controller:
         self.print_second_menu()
         chosen_period = input("Podaj wybrana wartosc ")
         measurement_date_string = input("Podaj startową date i godzine wykonania pomiaru, uźyj formatu 01.03.2022 15:34 ")
-        measurement_date = datetime.strptime(measurement_date_string, '%d.%m.%Y %H:%M')
-        mode = input("Podaj jakie pomiary chcesz analizowac 1- po jedzieniu, 2- na czczo, 3 - wszystkie")
-        measurements_list = self.database.measurements_list.copy()
-        if mode != '3':
-            if mode == '1':
-                measurements_list = find_measurements_with_specific_mode("po jedzeniu", measurements_list)
-                border_value = 140
-            else:
-                measurements_list = find_measurements_with_specific_mode("na czczo", measurements_list)
-                border_value = 100
-        if len(measurements_list) == 0:
-            print("Nie ma pomiarów o takich własnościach")
-            return
-        measurements_list = find_measurements_from_period(chosen_period, measurement_date, measurements_list)
-        if len(measurements_list) == 0:
-            print("Nie ma pomiarów o takich własnościach")
-            return
-        average, min_sugar, max_sugar = measurements_database.analise_measurements(measurements_list)
-        measurements_list_sorted = return_sorted_chronologically(measurements_list)
-        [print(i, end='\n') for i in measurements_list]
-        print("")
-        [print(i, end='\n') for i in measurements_list_sorted]
-        print(f'average: {average}, min: {min_sugar}, max: {max_sugar}')
-        if mode != '3':
-            plot_histogram(return_sugar_values(measurements_list), border_value)
+        #measurement_date = datetime.strptime(measurement_date_string, '%d.%m.%Y %H:%M')
+        self.database.delete_measurement_at_date(measurement_date_string)
+        # mode = input("Podaj jakie pomiary chcesz analizowac 1- po jedzieniu, 2- na czczo, 3 - wszystkie")
+        # measurements_list = self.database.measurements_list.copy()
+        # if mode != '3':
+        #     if mode == '1':
+        #         measurements_list = find_measurements_with_specific_mode("po jedzeniu", measurements_list)
+        #         border_value = 140
+        #     else:
+        #         measurements_list = find_measurements_with_specific_mode("na czczo", measurements_list)
+        #         border_value = 100
+        # if len(measurements_list) == 0:
+        #     print("Nie ma pomiarów o takich własnościach")
+        #     return
+        # measurements_list = find_measurements_from_period(chosen_period, measurement_date, measurements_list)
+        # if len(measurements_list) == 0:
+        #     print("Nie ma pomiarów o takich własnościach")
+        #     return
+        # average, min_sugar, max_sugar = measurements_database.analise_measurements(measurements_list)
+        # measurements_list_sorted = return_sorted_chronologically(measurements_list)
+        # [print(i, end='\n') for i in measurements_list]
+        # print("")
+        # [print(i, end='\n') for i in measurements_list_sorted]
+        # print(f'average: {average}, min: {min_sugar}, max: {max_sugar}')
+        # if mode != '3':
+        #     plot_histogram(return_sugar_values(measurements_list), border_value)
 
     def string_measurement_list(self):
         measurements_list = self.database.measurements_list.copy()
