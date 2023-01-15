@@ -143,7 +143,7 @@ class MeasurementsDataBase:
     def delete_measurement_at_date(self, date):
         self.c.execute(f'DELETE FROM pomiary WHERE measurement_date="{date}";')
         self.conn.commit()
-        date = datetime.strptime(date, '%d.%m.%Y %H:%M')
+        #date = datetime.strptime(date, '%d.%m.%Y %H:%M')
         for measurement in self.measurements_list:
             if measurement.date == date:
                 measurement_to_remove = measurement

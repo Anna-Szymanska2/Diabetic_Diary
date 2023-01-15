@@ -1,8 +1,10 @@
+import re
+
 from PySide6.QtCore import QDate, QTime, QDateTime
 from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, \
     QDateTimeEdit, QHBoxLayout, QMessageBox
 
-import controller
+from datetime import datetime
 
 
 class FirstPage(QWidget):
@@ -83,6 +85,10 @@ class FirstPage(QWidget):
             self.show_message_box(" ", s)
 
     def delete_item(self):
+        s = self.list_widget.currentItem().text()
+        date = re.search('\d{2}.\d{2}.\d{4} \d{2}:\d{2}', s)
+        measurement_date = datetime.strptime(date.group(), '%d.%m.%Y %H:%M')
+        self.controller.database.delete_measurement_at_date(measurement_date)
         self.list_widget.takeItem(self.list_widget.currentRow())
 
     def show_message_box(self, title, value):
