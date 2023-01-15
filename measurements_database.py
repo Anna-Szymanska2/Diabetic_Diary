@@ -139,7 +139,8 @@ class MeasurementsDataBase:
         self.c.execute('DELETE FROM pomiary')
         self.conn.commit()
         self.measurements_list.clear()
-        return 'Baza danych została wyczyszczona'
+
+        return "Baza danych została wyczyszczona"
 
     def delete_measurement_at_date(self, date):
         #date = datetime.strptime(date, '%d.%m.%Y %H:%M')

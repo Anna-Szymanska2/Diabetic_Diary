@@ -81,8 +81,9 @@ class FirstPage(QWidget):
                                    "Czy jesteś pewnien, że chcesz usunąć wszytkie pomiary?",
                                    QMessageBox.Ok | QMessageBox.Cancel)
         if ret == QMessageBox.Ok:
-            s = self.controller.database.clear_all_measurements
+            s = self.controller.database.clear_all_measurements()
             self.show_message_box(" ", s)
+            self.list_widget.clear()
 
     def delete_item(self):
         s = self.list_widget.currentItem().text()
