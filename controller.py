@@ -119,8 +119,7 @@ class Controller:
         measurements_list = self.database.measurements_list.copy()
         string_list = []
         for i in measurements_list:
-            for i in measurements_list:
-                string_list.append(i.__str__())
+            string_list.append(i.__str__())
         return string_list
 
 
