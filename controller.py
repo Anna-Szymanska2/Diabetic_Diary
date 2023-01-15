@@ -2,7 +2,7 @@ from datetime import datetime
 
 import measurements_database
 from measurements_database import *
-from view import *
+from histogram import *
 
 
 def to_string_measurement_list(measurements_list):

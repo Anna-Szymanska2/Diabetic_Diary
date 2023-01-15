@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QComboBox, QDateTimeEdit, QPushBu
 
 from controller import to_string_measurement_list
 from measurements_database import *
-from view import plot_histogram
+from histogram import plot_histogram
 
 
 class SecondPage(QWidget):
@@ -76,6 +76,8 @@ class SecondPage(QWidget):
         mode = self.combo_box_mode.currentIndex() + 1
         end_date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
         measurements_list = self.controller.database.measurements_list.copy()
+        start_date = return_start_date(period, end_date)
+        start_date = start_date.strftime("%d.%m.%Y")
 
         if mode != 1:
             if mode == 3:
@@ -104,7 +106,7 @@ class SecondPage(QWidget):
         self.max_label.setText("Cukier max: " + str(max_sugar))
 
         if mode != 1:
-            plot_histogram(return_sugar_values(measurements_list), border_value)
+            plot_histogram(return_sugar_values(measurements_list_sorted), border_value, mode, start_date, end_date)
             self.image_label.setPixmap(QPixmap("plot.png"))
 
     def show_message_box(self, title, value):

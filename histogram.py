@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 from matplotlib.axis import Axis
 
-def plot_histogram(sugar_values, border_value):
+def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
     bins = []
     i = 10
     while i <= 400:
@@ -21,7 +21,12 @@ def plot_histogram(sugar_values, border_value):
     plt.ylabel("Częstość")
     plt.legend([patches[0], patches[4], patches[6]], ["zagrożenie życia", "nieprawidłowy cukier", "prawidłowy cukier"])
     #nie wiem czy chcemy w ogole cos takiego wiec na razie nie poprawiam
-    plt.title("Histogram pomiarów cukru na czczo, okres 12.22.2022 - 13.22.2022")
+    if mode == 2:
+        mode = "na czczo"
+    else:
+        mode = "po jedzeniu"
+    end_date = end_date[:-6]
+    plt.title(f"Histogram pomiarów cukru {mode}, okres {start_date} - {end_date}")
    # x = [*range(10, 400, 20)]
    # plt.xticks(x)
     #formatter = ticker.FormatStrFormatter('?%1.2f')

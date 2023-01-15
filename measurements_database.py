@@ -32,7 +32,7 @@ def find_measurements_with_specific_mode(mode, measurements_list):
     return measurements_with_specific_mode
 
 
-def find_measurements_from_period(period, end_date, measurements_list):
+def return_start_date(period, end_date):
     end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     match period:
         case 1:
@@ -43,7 +43,13 @@ def find_measurements_from_period(period, end_date, measurements_list):
             start_date = end_date + relativedelta(days=-7)
         case 4:
             start_date = end_date + relativedelta(days=-1)
+    return start_date
 
+
+def find_measurements_from_period(period, end_date, measurements_list):
+
+    start_date = return_start_date(period, end_date)
+    end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     measurements_from_period = []
     for measurement in measurements_list:
         if start_date < measurement.date <= end_date:
