@@ -13,7 +13,7 @@ class FirstPage(QWidget):
         self.controller = controller
 
         self.list_widget = QListWidget(self)
-        string_list = self.controller.string_measurement_list()
+        string_list = self.controller.database.string_measurement_list()
 
         self.list_widget.addItems(string_list)
 
@@ -57,7 +57,7 @@ class FirstPage(QWidget):
         self.setLayout(v_layout)
 
     def add_item(self):
-        length = len(self.controller.string_measurement_list().copy())
+        length = len(self.controller.database.string_measurement_list().copy())
         sugar = self.line_edit.text()
         date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
         mode = self.combo_box.currentIndex()
@@ -68,9 +68,9 @@ class FirstPage(QWidget):
             mode = "na czczo"
         try:
             s = self.controller.database.add_new_measurement(sugar, date, mode)
-            if len(self.controller.string_measurement_list().copy()) > length:
+            if len(self.controller.database.string_measurement_list().copy()) > length:
                 self.list_widget.clear()
-                string_list = self.controller.string_measurement_list()
+                string_list = self.controller.database.string_measurement_list()
                 self.list_widget.addItems(string_list)
             self.show_message_box(" ", s)
         except ValueError:

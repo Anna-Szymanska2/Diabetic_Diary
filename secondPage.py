@@ -3,7 +3,6 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QWidget, QLabel, QComboBox, QDateTimeEdit, QPushButton, QListWidget, QHBoxLayout, \
     QGridLayout, QVBoxLayout, QMessageBox
 
-from controller import to_string_measurement_list
 from measurements_database import *
 from histogram import plot_histogram
 
@@ -36,7 +35,7 @@ class SecondPage(QWidget):
         button_analise.clicked.connect(self.analise)
 
         self.list_widget = QListWidget(self)
-        string_list = self.controller.string_measurement_list()
+        string_list = self.controller.database.string_measurement_list()
 
         self.list_widget.addItems(string_list)
 
@@ -97,7 +96,7 @@ class SecondPage(QWidget):
         avg_sugar, min_sugar, max_sugar = analise_measurements(measurements_from_period)
         measurements_list_sorted = return_sorted_chronologically(measurements_from_period)
         self.list_widget.clear()
-        string_list = to_string_measurement_list(measurements_list_sorted)
+        string_list = self.controller.database.string_measurement_list()
         self.list_widget.addItems(string_list)
         self.list_widget.setMinimumWidth(self.list_widget.sizeHintForColumn(0))
 
