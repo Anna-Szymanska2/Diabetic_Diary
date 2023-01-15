@@ -6,7 +6,6 @@ from statistics import mean
 from dateutil.relativedelta import relativedelta
 
 
-
 def return_sugar_values(measurements_list):
     sugar_list = []
     [sugar_list.append(measurement.sugar) for measurement in measurements_list]
@@ -79,20 +78,6 @@ class MeasurementsDataBase:
             measurement_date = datetime.strptime(measurement_date, '%d.%m.%Y %H:%M')
             self.measurements_list.append(Measurement(sugar, measurement_date, mode))
 
-    def display_all_measurements(self):
-        """A function that displays all results stored in the database"""
-        print()
-        print("Twoje wszystkie zapisane pomiary:")
-        print()
-        self.c.execute('SELECT * FROM pomiary ORDER BY measurement_date')
-        print("Cukier Data pomiaru")
-        for row in self.c.fetchall():
-            sugar, measurement_date, _ = row
-            print(str(sugar) + " " * (len("Cukier ") - len(str(sugar))) +
-                  str(measurement_date) + " " * (len("Data pomiaru ") - len(str(measurement_date))))
-
-        [print(i, end='\n') for i in self.measurements_list]
-
     def add_new_measurement(self, sugar, date, mode):
         sugar = int(sugar)
         measurement_date = datetime.strptime(date, '%d.%m.%Y %H:%M')
@@ -126,13 +111,6 @@ class MeasurementsDataBase:
         # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
         return s + "\n"+"Podane przez Ciebie dane zostały dodane do bazy"
 
-    def delete_last_measurement(self):
-        """A function that deletes recently added measurement from the database"""
-        self.c.execute('DELETE FROM pomiary WHERE rowid = (SELECT MAX(rowid) FROM pomiary)')
-        self.conn.commit()
-        self.measurements_list.pop(-1)
-        print('Pomiar został usunięty')
-
     def clear_all_measurements(self):
         """A function that deletes all the measurements from the database."""
 
@@ -143,7 +121,6 @@ class MeasurementsDataBase:
         return "Baza danych została wyczyszczona"
 
     def delete_measurement_at_date(self, date):
-        #date = datetime.strptime(date, '%d.%m.%Y %H:%M')
         for measurement in self.measurements_list:
             if measurement.date == date:
                 measurement_to_remove = measurement

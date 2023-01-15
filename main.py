@@ -8,10 +8,8 @@ from firstPage import FirstPage
 from mainWindow import MainWindow
 import sys
 
-def main():
-    # controller = Controller()
-    # controller.main()
 
+def main():
     app = QApplication(sys.argv)
 
     window = MainWindow()
