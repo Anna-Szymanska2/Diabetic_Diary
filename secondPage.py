@@ -119,6 +119,7 @@ class SecondPage(QWidget):
 
         After analise has been performed displays histogram and average, min and max value of the measurements
         """
+        self.image_label.clear()
         period = self.combo_box_time.currentIndex() + 1
         mode = self.combo_box_mode.currentIndex() + 1
         end_date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
