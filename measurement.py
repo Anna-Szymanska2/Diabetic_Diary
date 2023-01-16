@@ -22,6 +22,7 @@ class Measurement:
         :param mode: was the measurement after meal or not
         :type: str
         """
+
         self.sugar = sugar
         self.date = date
         self.mode = mode
@@ -32,5 +33,6 @@ class Measurement:
         :return: formatted string that is a description of measurement
         :type: str
         """
+
         formatted_date = self.date.strftime('%d.%m.%Y %H:%M')
         return f'{str(round(self.sugar))} {formatted_date} {self.mode}'

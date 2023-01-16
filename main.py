@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QApplication
-
 from mainWindow import MainWindow
 import sys
 
@@ -13,10 +12,8 @@ and analysing their statistical properties. The app enables to draw histogram of
 
 def main():
     app = QApplication(sys.argv)
-
     window = MainWindow()
     window.show()
-
     app.exec()
 
 

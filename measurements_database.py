@@ -23,6 +23,7 @@ def return_sugar_values(measurements_list):
     :return: list of sugars values
     :type: list
     """
+
     sugar_list = []
     [sugar_list.append(measurement.sugar) for measurement in measurements_list]
     return sugar_list
@@ -35,6 +36,7 @@ def analise_measurements(measurements_list):
     :return: statistic properties of measurements (average, min, max)
     :Tuple
     """
+
     measurements_list_copy = measurements_list.copy()
     measurements_list_copy.sort(key=attrgetter('sugar'))
     sugar_list = return_sugar_values(measurements_list_copy)
@@ -54,6 +56,7 @@ def find_measurements_with_specific_mode(mode, measurements_list):
     :return: list of measurements with specific mode
     :type: list
     """
+
     measurements_with_specific_mode = []
     for measurement in measurements_list:
         if measurement.mode == mode:
@@ -72,6 +75,7 @@ def return_start_date(period, end_date):
     :return: the date that is before the taken date
     :type: datetime
     """
+
     end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     match period:
         case 1:
@@ -96,6 +100,7 @@ def find_measurements_from_period(period, end_date, measurements_list):
     :return: measurements from period
     :type: list
     """
+
     start_date = return_start_date(period, end_date)
     end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     measurements_from_period = []
@@ -114,6 +119,7 @@ def return_sorted_chronologically(measurements_list):
     :return: list sorted chronologically
     :type: list
     """
+
     measurements_list = measurements_list.copy()
     measurements_list.sort(key=attrgetter('date'))
     return measurements_list
@@ -160,6 +166,7 @@ class MeasurementsDataBase:
         :return: information about adding or not adding measurement
         :type: str
         """
+
         sugar = int(sugar)
         measurement_date = datetime.strptime(date, '%d.%m.%Y %H:%M')
         current_date = datetime.now()
