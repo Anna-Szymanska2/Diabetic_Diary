@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
         """
         second_page = self.second_page
         self.central_widget.addWidget(second_page)
-        string_list = string_measurement_list(self.database.measurements_list.copy())
+        string_list = string_measurement_list(return_sorted_chronologically(self.database.measurements_list.copy()))
         second_page.list_widget.clear()
 
         second_page.list_widget.addItems(string_list)

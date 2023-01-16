@@ -17,7 +17,7 @@ class FirstPage(QWidget):
         self.database = database
 
         self.list_widget = QListWidget(self)
-        string_list = string_measurement_list(self.database.measurements_list.copy())
+        string_list = string_measurement_list(return_sorted_chronologically(self.database.measurements_list.copy()))
 
         self.list_widget.addItems(string_list)
 
@@ -78,7 +78,7 @@ class FirstPage(QWidget):
             s = self.database.add_new_measurement(sugar, date, mode)
             if len(string_measurement_list(self.database.measurements_list.copy())) > length:
                 self.list_widget.clear()
-                string_list = string_measurement_list(self.database.measurements_list.copy())
+                string_list = string_measurement_list(return_sorted_chronologically(self.database.measurements_list.copy()))
                 self.list_widget.addItems(string_list)
             self.show_message_box(" ", s)
         except ValueError:
