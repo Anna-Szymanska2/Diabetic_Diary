@@ -7,9 +7,13 @@ from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QL
 from datetime import datetime
 
 
-
 class FirstPage(QWidget):
+    """ Class FirstPage is used to model view od the first page of the application
+    """
     def __init__(self, controller):
+        """
+        :param controller: controller used for performing actions on the database
+        """
         super().__init__()
         self.controller = controller
 
@@ -58,6 +62,10 @@ class FirstPage(QWidget):
         self.setLayout(v_layout)
 
     def add_item(self):
+        """ Adding measurement to the database
+
+        Displays message after action has been performed
+        """
         length = len(self.controller.database.string_measurement_list().copy())
         sugar = self.line_edit.text()
         date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
@@ -78,6 +86,10 @@ class FirstPage(QWidget):
             self.show_message_box("Błąd", "Podałeś dane w nieodpowiednim formacie")
 
     def delete_all_items(self):
+        """ Deleting all measurements from the database
+
+        Before concluding action displays message asking if the user is sure they want to proceed.
+        """
         ret = QMessageBox.question(self, "Message Title",
                                    "Czy jesteś pewnien, że chcesz usunąć wszytkie pomiary?",
                                    QMessageBox.Ok | QMessageBox.Cancel)
@@ -87,6 +99,8 @@ class FirstPage(QWidget):
             self.list_widget.clear()
 
     def delete_item(self):
+        """ Deletes chosen measurement from the database
+        """
         s = self.list_widget.currentItem().text()
         date = re.search('\d{2}.\d{2}.\d{4} \d{2}:\d{2}', s)
         measurement_date = datetime.strptime(date.group(), '%d.%m.%Y %H:%M')
@@ -94,4 +108,10 @@ class FirstPage(QWidget):
         self.list_widget.takeItem(self.list_widget.currentRow())
 
     def show_message_box(self, title, value):
+        """ Displays message
+
+        :param title: title of the message
+        :param value: text of the message
+        :return:
+        """
         ret = QMessageBox.information(self, title, value)

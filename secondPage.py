@@ -8,7 +8,12 @@ from histogram import plot_histogram
 
 
 class SecondPage(QWidget):
-    def __init__(self,controller):
+    """Class SecondPage is used to model view od the second page of the application
+    """
+    def __init__(self, controller):
+        """
+        :param controller: controller used for performing actions on the database
+        """
         super().__init__()
         self.controller = controller
 
@@ -71,6 +76,10 @@ class SecondPage(QWidget):
         self.setLayout(v_layout)
 
     def analise(self):
+        """ Analise's measurements from chosen mode and period
+
+        After analise has been performed displays histogram and average, min and max value of the measurements
+        """
         period = self.combo_box_time.currentIndex() + 1
         mode = self.combo_box_mode.currentIndex() + 1
         end_date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
@@ -109,4 +118,10 @@ class SecondPage(QWidget):
             self.image_label.setPixmap(QPixmap("plot.png"))
 
     def show_message_box(self, title, value):
+        """Displays message
+
+        :param title: title of the message
+        :param value: text of the message
+        :return:
+        """
         ret = QMessageBox.information(self, title, value)

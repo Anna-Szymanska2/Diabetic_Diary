@@ -1,11 +1,11 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QSizePolicy, QStackedWidget
+from PySide6.QtWidgets import QMainWindow, QStackedWidget
 
 from controller import Controller
-from firstPage import FirstPage
-from secondPage import SecondPage
 
 
 class MainWindow(QMainWindow):
+    """ Class MainWindow is used to model main window of the application
+    """
     def __init__(self):
         super().__init__()
         self.controller = Controller()
@@ -24,11 +24,15 @@ class MainWindow(QMainWindow):
         self.central_widget.addWidget(first_page)
 
     def measurements_action(self):
+        """Switches to first page view after clicking button
+        """
         first_page = self.controller.first_page
         self.central_widget.addWidget(first_page)
         self.central_widget.setCurrentWidget(first_page)
 
     def analise_action(self):
+        """Switches to second page view after clicking button
+        """
         second_page = self.controller.second_page
         self.central_widget.addWidget(second_page)
         self.central_widget.setCurrentWidget(second_page)
