@@ -51,14 +51,13 @@ def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
 
 
 class SecondPage(QWidget):
-    """Class SecondPage is used to model view od the second page of the application
-    """
-    def __init__(self, controller):
+    """Class SecondPage is used to model view od the second page of the application"""
+    def __init__(self, database):
         """
-        :param controller: controller used for performing actions on the database
+        :param database: database of measurements
         """
         super().__init__()
-        self.controller = controller
+        self.database = database
 
         time_period_label = QLabel("Zakres czasu: ")
         self.combo_box_time = QComboBox(self)
@@ -123,7 +122,7 @@ class SecondPage(QWidget):
         period = self.combo_box_time.currentIndex() + 1
         mode = self.combo_box_mode.currentIndex() + 1
         end_date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
-        measurements_list = self.controller.database.measurements_list.copy()
+        measurements_list = self.database.measurements_list.copy()
         start_date = return_start_date(period, end_date)
         start_date = start_date.strftime("%d.%m.%Y")
 
@@ -145,7 +144,7 @@ class SecondPage(QWidget):
         avg_sugar, min_sugar, max_sugar = analise_measurements(measurements_from_period)
         measurements_list_sorted = return_sorted_chronologically(measurements_from_period)
         self.list_widget.clear()
-        string_list = self.controller.string_measurement_list(measurements_list_sorted)
+        string_list = string_measurement_list(measurements_list_sorted)
         self.list_widget.addItems(string_list)
         self.list_widget.setMinimumWidth(self.list_widget.sizeHintForColumn(0))
 

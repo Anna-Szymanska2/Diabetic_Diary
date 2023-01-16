@@ -8,6 +8,13 @@ from dateutil.relativedelta import relativedelta
 """Module measurement_database gives tools to work with database of sugar measurements"""
 
 
+def string_measurement_list(measurements_list):
+    string_list = []
+    for i in measurements_list:
+        string_list.append(i.__str__())
+    return string_list
+
+
 def return_sugar_values(measurements_list):
     """Creates list of sugars values taken from measurements from the list of them
 
@@ -202,13 +209,6 @@ class MeasurementsDataBase:
         date = date.strftime('%d.%m.%Y %H:%M')
         self.c.execute(f'DELETE FROM pomiary WHERE measurement_date="{date}";')
         self.conn.commit()
-
-    def string_measurement_list(self):
-        measurements_list = self.measurements_list.copy()
-        string_list = []
-        for i in measurements_list:
-            string_list.append(i.__str__())
-        return string_list
 
 
 

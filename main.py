@@ -1,7 +1,6 @@
 from datetime import datetime
 import sqlite3
 import math
-from controller import Controller
 from PySide6.QtWidgets import QApplication
 
 from firstPage import FirstPage
@@ -14,6 +13,7 @@ This script allows user to gather their sugar measurements in a database. Applic
 The user has possibility of adding new measurement, deleting the chosen one, displaying all collected measurements 
 and analysing their statistical properties. The app enables to draw histogram of measurements from chosen timeline.
 """
+
 
 def main():
     app = QApplication(sys.argv)

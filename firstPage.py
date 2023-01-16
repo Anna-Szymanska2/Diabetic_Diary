@@ -3,24 +3,21 @@ import re
 from PySide6.QtCore import QDate, QTime, QDateTime
 from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QComboBox, \
     QDateTimeEdit, QHBoxLayout, QMessageBox
-
-from datetime import datetime
-
-
+from measurements_database import *
 
 
 class FirstPage(QWidget):
-    """ Class FirstPage is used to model view od the first page of the application
-    """
-    def __init__(self, controller):
+    """ Class FirstPage is used to model view od the first page of the application"""
+
+    def __init__(self, database):
         """
-        :param controller: controller used for performing actions on the database
+        :param database: database of measurements
         """
         super().__init__()
-        self.controller = controller
+        self.database = database
 
         self.list_widget = QListWidget(self)
-        string_list = self.controller.string_measurement_list(self.controller.database.measurements_list.copy())
+        string_list = string_measurement_list(self.database.measurements_list.copy())
 
         self.list_widget.addItems(string_list)
 
@@ -68,7 +65,7 @@ class FirstPage(QWidget):
 
         Displays message after action has been performed
         """
-        length = len(self.controller.string_measurement_list(self.controller.database.measurements_list.copy()))
+        length = len(string_measurement_list(self.database.measurements_list.copy()))
         sugar = self.line_edit.text()
         date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
         mode = self.combo_box.currentIndex()
@@ -78,10 +75,10 @@ class FirstPage(QWidget):
         else:
             mode = "na czczo"
         try:
-            s = self.controller.database.add_new_measurement(sugar, date, mode)
-            if len(self.controller.string_measurement_list(self.controller.database.measurements_list.copy())) > length:
+            s = self.database.add_new_measurement(sugar, date, mode)
+            if len(string_measurement_list(self.database.measurements_list.copy())) > length:
                 self.list_widget.clear()
-                string_list = self.controller.string_measurement_list(self.controller.database.measurements_list.copy())
+                string_list = string_measurement_list(self.database.measurements_list.copy())
                 self.list_widget.addItems(string_list)
             self.show_message_box(" ", s)
         except ValueError:
@@ -96,7 +93,7 @@ class FirstPage(QWidget):
                                    "Czy jesteś pewnien, że chcesz usunąć wszytkie pomiary?",
                                    QMessageBox.Ok | QMessageBox.Cancel)
         if ret == QMessageBox.Ok:
-            s = self.controller.database.clear_all_measurements()
+            s = self.database.clear_all_measurements()
             self.show_message_box(" ", s)
             self.list_widget.clear()
 
@@ -106,7 +103,7 @@ class FirstPage(QWidget):
         s = self.list_widget.currentItem().text()
         date = re.search('\d{2}.\d{2}.\d{4} \d{2}:\d{2}', s)
         measurement_date = datetime.strptime(date.group(), '%d.%m.%Y %H:%M')
-        self.controller.database.delete_measurement_at_date(measurement_date)
+        self.database.delete_measurement_at_date(measurement_date)
         self.list_widget.takeItem(self.list_widget.currentRow())
 
     def show_message_box(self, title, value):
