@@ -35,4 +35,7 @@ class MainWindow(QMainWindow):
         """
         second_page = self.controller.second_page
         self.central_widget.addWidget(second_page)
+        string_list = self.controller.string_measurement_list(self.controller.database.measurements_list.copy())
+
+        second_page.list_widget.addItems(string_list)
         self.central_widget.setCurrentWidget(second_page)

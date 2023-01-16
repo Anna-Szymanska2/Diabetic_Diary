@@ -40,9 +40,6 @@ class SecondPage(QWidget):
         button_analise.clicked.connect(self.analise)
 
         self.list_widget = QListWidget(self)
-        string_list = controller.database.string_measurement_list()
-
-        self.list_widget.addItems(string_list)
 
         self.avg_label = QLabel("Cukier średni: ")
         self.min_label = QLabel("Cukier min: ")
@@ -105,7 +102,7 @@ class SecondPage(QWidget):
         avg_sugar, min_sugar, max_sugar = analise_measurements(measurements_from_period)
         measurements_list_sorted = return_sorted_chronologically(measurements_from_period)
         self.list_widget.clear()
-        string_list = self.controller.database.string_measurement_list()
+        string_list = self.controller.string_measurement_list(measurements_list_sorted)
         self.list_widget.addItems(string_list)
         self.list_widget.setMinimumWidth(self.list_widget.sizeHintForColumn(0))
 

@@ -7,6 +7,8 @@ from PySide6.QtWidgets import QWidget, QListWidget, QVBoxLayout, QPushButton, QL
 from datetime import datetime
 
 
+
+
 class FirstPage(QWidget):
     """ Class FirstPage is used to model view od the first page of the application
     """
@@ -18,7 +20,7 @@ class FirstPage(QWidget):
         self.controller = controller
 
         self.list_widget = QListWidget(self)
-        string_list = controller.database.string_measurement_list()
+        string_list = self.controller.string_measurement_list(self.controller.database.measurements_list.copy())
 
         self.list_widget.addItems(string_list)
 
@@ -66,7 +68,7 @@ class FirstPage(QWidget):
 
         Displays message after action has been performed
         """
-        length = len(self.controller.database.string_measurement_list().copy())
+        length = len(self.controller.string_measurement_list(self.controller.database.measurements_list.copy()))
         sugar = self.line_edit.text()
         date = self.dateEdit.dateTime().toString(self.dateEdit.displayFormat())
         mode = self.combo_box.currentIndex()
@@ -77,9 +79,9 @@ class FirstPage(QWidget):
             mode = "na czczo"
         try:
             s = self.controller.database.add_new_measurement(sugar, date, mode)
-            if len(self.controller.database.string_measurement_list().copy()) > length:
+            if len(self.controller.string_measurement_list(self.controller.database.measurements_list.copy())) > length:
                 self.list_widget.clear()
-                string_list = self.controller.database.string_measurement_list()
+                string_list = self.controller.string_measurement_list(self.controller.database.measurements_list.copy())
                 self.list_widget.addItems(string_list)
             self.show_message_box(" ", s)
         except ValueError:
