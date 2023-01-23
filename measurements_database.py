@@ -5,14 +5,29 @@ from operator import attrgetter
 from statistics import mean
 from dateutil.relativedelta import relativedelta
 
+"""Module measurement_database gives tools to work with database of sugar measurements"""
+
 
 def return_sugar_values(measurements_list):
+    """Creates list of sugars values taken from measurements from the list of them
+
+    :param measurements_list: list of measurements
+    :type: list
+    :return: list of sugars values
+    :type: list
+    """
     sugar_list = []
     [sugar_list.append(measurement.sugar) for measurement in measurements_list]
     return sugar_list
 
 
 def analise_measurements(measurements_list):
+    """Returns statistic properties of measurements on the list
+
+    :param measurements_list: list of measurements
+    :return: statistic properties of measurements (average, min, max)
+    :Tuple
+    """
     measurements_list_copy = measurements_list.copy()
     measurements_list_copy.sort(key=attrgetter('sugar'))
     sugar_list = return_sugar_values(measurements_list_copy)
@@ -24,6 +39,14 @@ def analise_measurements(measurements_list):
 
 
 def find_measurements_with_specific_mode(mode, measurements_list):
+    """Returns list of measurements with specific mode (after the meal or not)
+
+    :param mode: says whether measurement was taken after the meal or not
+    :type: str
+    :param measurements_list: list of measurement from which we add measurements that match
+    :return: list of measurements with specific mode
+    :type: list
+    """
     measurements_with_specific_mode = []
     for measurement in measurements_list:
         if measurement.mode == mode:
@@ -33,6 +56,15 @@ def find_measurements_with_specific_mode(mode, measurements_list):
 
 
 def return_start_date(period, end_date):
+    """Returns date that is before the taken date from chosen distance.
+
+    :param period: chosen distance
+    :type: int
+    :param end_date: the date from which we count
+    :type: datetime
+    :return: the date that is before the taken date
+    :type: datetime
+    """
     end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     match period:
         case 1:
@@ -47,7 +79,16 @@ def return_start_date(period, end_date):
 
 
 def find_measurements_from_period(period, end_date, measurements_list):
+    """Returns list that has measurements with date that is between two dates.
 
+    :param period: how long is the distance between two dates
+    :param end_date: the later date
+    :type: datetime
+    :param measurements_list: list of measurements
+    :type: list
+    :return: measurements from period
+    :type: list
+    """
     start_date = return_start_date(period, end_date)
     end_date = datetime.strptime(end_date, '%d.%m.%Y %H:%M')
     measurements_from_period = []
@@ -59,14 +100,36 @@ def find_measurements_from_period(period, end_date, measurements_list):
 
 
 def return_sorted_chronologically(measurements_list):
+    """Returns list that is a copy of argument list sorted chronologically.
+
+    :param measurements_list: list of measurements
+    :type: list
+    :return: list sorted chronologically
+    :type: list
+    """
     measurements_list = measurements_list.copy()
     measurements_list.sort(key=attrgetter('date'))
     return measurements_list
 
 
 class MeasurementsDataBase:
+    """Class Measurement models sugar in blood measurement
+
+    :param conn: connection with sqlite3 database
+    :param c: cursor from sqlite3
+    :param measurements_list: list of all measurements from database
+    """
 
     def __init__(self):
+        """
+
+        :param conn: connection with sqlite3 database
+        :type Connection
+        :param c: cursor from sqlite3
+        :type Cursor
+        :param measurements_list: list of all measurements from database
+        :type: list
+        """
         self.conn = sqlite3.connect('pomiary.db')
         self.c = self.conn.cursor()
         self.c.execute('''CREATE TABLE IF NOT EXISTS pomiary
@@ -79,40 +142,49 @@ class MeasurementsDataBase:
             self.measurements_list.append(Measurement(sugar, measurement_date, mode))
 
     def add_new_measurement(self, sugar, date, mode):
+        """Adds new measurement to the list of them and to the database if they are correct (checks it before).
+
+        :param sugar: amount of sugar in the blood mg/dl
+        :type int
+        :param date: date and hour of measurement
+        :type datetime
+        :param mode: was the measurement after meal or not
+        :type: str
+        :return: information about adding or not adding measurement
+        :type: str
+        """
         sugar = int(sugar)
         measurement_date = datetime.strptime(date, '%d.%m.%Y %H:%M')
         current_date = datetime.now()
         s = " "
         if measurement_date > current_date:
-            # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
             return "Data nie może być przyszła"
         if sugar > 400 or sugar < 10:
             return "Podana przez Ciebie wartość nie jest możliwa, podany cukier musi mieścić się w przedziale <10,400>"
         if mode == "po jedzeniu":
             if sugar > 140:
-                # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
                s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
         else:
             if sugar > 100:
-                # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
                 s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
         if sugar < 70:
-            # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
             s = "To zbyt niski wynik, możesz mieć cukrzycę"
 
         measurement = Measurement(sugar, measurement_date, mode)
         if any(x.date == measurement_date for x in self.measurements_list):
-            # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
             return "W bazie danych istnieje już pomiar z taką datą, więc nie można go dodać"
         self.measurements_list.append(measurement)
         script = """INSERT INTO pomiary VALUES (?, ?, ?)"""
         self.conn.execute(script, (sugar, date, mode))
         self.conn.commit()
-        # tu zakładam ze wstawisz jakiegos dialog boxa czy cos
         return s + "\n"+"Podane przez Ciebie dane zostały dodane do bazy"
 
     def clear_all_measurements(self):
-        """A function that deletes all the measurements from the database and the list."""
+        """Deletes all the measurements from the database and the list.
+
+        :return: information about deleting
+        :type: str
+        """
 
         self.c.execute('DELETE FROM pomiary')
         self.conn.commit()
@@ -121,6 +193,8 @@ class MeasurementsDataBase:
         return "Baza danych została wyczyszczona"
 
     def delete_measurement_at_date(self, date):
+        """Deletes chosen by the user measurement"""
+
         for measurement in self.measurements_list:
             if measurement.date == date:
                 measurement_to_remove = measurement

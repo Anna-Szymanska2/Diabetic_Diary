@@ -4,6 +4,19 @@ from matplotlib.axis import Axis
 
 
 def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
+    """Plots histogram of sugar values, good results are green, very bad red and bad are orange.
+
+    :param sugar_values: values of sugar
+    :type list
+    :param border_value: border value that says which values should be orange
+    :type int
+    :param mode: says whether measurement was after meal
+    :type int
+    :param start_date: the first date of range from which measurements where taken
+    :type str
+    :param end_date: the last date of range from which measurements where taken
+    :type str
+    """
     bins = []
     i = 10
     while i <= 400:
