@@ -36,17 +36,17 @@ def plot_histogram(sugar_values, border_value, mode, start_date, end_date):
         patches[i].set_fc("red")
     for i in range(int(border_value/10)-1, 19):
         patches[i].set_fc("orange")
-    plt.xlabel("Cukier mg/dl")
-    plt.ylabel("Częstość")
-    plt.legend([patches[0], patches[4], patches[6]], ["zagrożenie życia", "nieprawidłowy cukier", "prawidłowy cukier"])
+    plt.xlabel("Sugar mg/dl")
+    plt.ylabel("Frequency")
+    plt.legend([patches[0], patches[4], patches[6]], ["life at risk", "abnormal blood sugar", "normal blood sugar"])
     fig.canvas.draw()
     fig.canvas.flush_events()
     if mode == 2:
-        mode = "na czczo"
+        mode = "fasting"
     else:
-        mode = "po jedzeniu"
+        mode = "after eating"
     end_date = end_date[:-6]
-    plt.title(f"Histogram pomiarów cukru {mode}, okres {start_date} - {end_date}")
+    plt.title(f"Blood sugar -  {mode}, period {start_date} - {end_date}")
     plt.savefig('plot.png')
 
 
@@ -59,33 +59,33 @@ class SecondPage(QWidget):
         super().__init__()
         self.database = database
 
-        time_period_label = QLabel("Zakres czasu: ")
+        time_period_label = QLabel("Period: ")
         self.combo_box_time = QComboBox(self)
-        self.combo_box_time.addItem("Rok")
-        self.combo_box_time.addItem("Miesiąc")
-        self.combo_box_time.addItem("Tydzień")
-        self.combo_box_time.addItem("Dzień")
+        self.combo_box_time.addItem("Year")
+        self.combo_box_time.addItem("Month")
+        self.combo_box_time.addItem("Week")
+        self.combo_box_time.addItem("Day")
 
-        start_time_label = QLabel("Czas rozpoczęcia: ")
+        start_time_label = QLabel("Starts from: ")
         self.dateEdit = QDateTimeEdit(QDateTime.currentDateTime())
         self.dateEdit.setMaximumDate(QDate.currentDate())
         self.dateEdit.setMaximumTime(QTime.currentTime())
         self.dateEdit.setDisplayFormat("dd.MM.yyyy hh:mm")
 
-        mode_label = QLabel("Rodzaj pomiarów: ")
+        mode_label = QLabel("Mode: ")
         self.combo_box_mode = QComboBox(self)
-        self.combo_box_mode.addItem("Wyszystkie")
-        self.combo_box_mode.addItem("Na czczo")
-        self.combo_box_mode.addItem("Po jedzeniu")
+        self.combo_box_mode.addItem("All")
+        self.combo_box_mode.addItem("Fasting")
+        self.combo_box_mode.addItem("After eating")
 
-        button_analise = QPushButton("Analiza")
+        button_analise = QPushButton("Analysis")
         button_analise.clicked.connect(self.analise)
 
         self.list_widget = QListWidget(self)
 
-        self.avg_label = QLabel("Cukier średni: ")
-        self.min_label = QLabel("Cukier min: ")
-        self.max_label = QLabel("Cukier max: ")
+        self.avg_label = QLabel("Blood sugar average: ")
+        self.min_label = QLabel("Blood sugar min: ")
+        self.max_label = QLabel("Blood sugar max: ")
 
         v_layout_labels = QVBoxLayout()
         v_layout_labels.addWidget(self.avg_label)
@@ -129,18 +129,18 @@ class SecondPage(QWidget):
 
         if mode != 1:
             if mode == 3:
-                measurements_list = find_measurements_with_specific_mode("po jedzeniu", measurements_list)
+                measurements_list = find_measurements_with_specific_mode("after eating", measurements_list)
                 border_value = 140
             else:
-                measurements_list = find_measurements_with_specific_mode("na czczo", measurements_list)
+                measurements_list = find_measurements_with_specific_mode("fasting", measurements_list)
                 border_value = 100
         if len(measurements_list) == 0:
-            self.show_message_box(" ","Nie ma pomiarów o takich własnościach")
+            self.show_message_box(" ","There aren't such measurements")
             return
 
         measurements_from_period = find_measurements_from_period(period, end_date, measurements_list)
         if len(measurements_from_period) == 0:
-            self.show_message_box(" ","Nie ma pomiarów o takich własnościach")
+            self.show_message_box(" ","There aren't such measurements")
             return
         avg_sugar, min_sugar, max_sugar = analise_measurements(measurements_from_period)
         measurements_list_sorted = return_sorted_chronologically(measurements_from_period)
@@ -149,9 +149,9 @@ class SecondPage(QWidget):
         self.list_widget.addItems(string_list)
         self.list_widget.setMinimumWidth(self.list_widget.sizeHintForColumn(0))
 
-        self.avg_label.setText("Cukier średni: " + str(avg_sugar))
-        self.min_label.setText("Cukier min: " + str(min_sugar))
-        self.max_label.setText("Cukier max: " + str(max_sugar))
+        self.avg_label.setText("Blood sugar average: " + str(avg_sugar))
+        self.min_label.setText("Blood sugar min: " + str(min_sugar))
+        self.max_label.setText("Blood sugar max: " + str(max_sugar))
 
         if mode != 1:
             plot_histogram(return_sugar_values(measurements_list_sorted), border_value, mode, start_date, end_date)
