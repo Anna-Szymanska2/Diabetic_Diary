@@ -172,26 +172,26 @@ class MeasurementsDataBase:
         current_date = datetime.now()
         s = " "
         if measurement_date > current_date:
-            return "Data nie może być przyszła"
+            return "Date cannot be from future"
         if sugar > 400 or sugar < 10:
-            return "Podana przez Ciebie wartość nie jest możliwa, podany cukier musi mieścić się w przedziale <10,400>"
-        if mode == "po jedzeniu":
+            return "Such value is impossible, try something from range <10,400>"
+        if mode == "after eating":
             if sugar > 140:
-               s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
+               s = "Value is too high, you can suffer from diabetes"
         else:
             if sugar > 100:
-                s = "To zbyt wysoki wynik, możesz mieć cukrzycę"
+                s = "Value is too high, you can suffer from diabetes"
         if sugar < 70:
-            s = "To zbyt niski wynik, możesz mieć cukrzycę"
+            s = "Value is too low, you can suffer from diabetes"
 
         measurement = Measurement(sugar, measurement_date, mode)
         if any(x.date == measurement_date for x in self.measurements_list):
-            return "W bazie danych istnieje już pomiar z taką datą, więc nie można go dodać"
+            return "There is measurement in database with such date so you cannot add it"
         self.measurements_list.append(measurement)
         script = """INSERT INTO pomiary VALUES (?, ?, ?)"""
         self.conn.execute(script, (sugar, date, mode))
         self.conn.commit()
-        return s + "\n"+"Podane przez Ciebie dane zostały dodane do bazy"
+        return s + "\n"+"Adding to database was successful"
 
     def clear_all_measurements(self):
         """Deletes all the measurements from the database and the list.
@@ -204,7 +204,7 @@ class MeasurementsDataBase:
         self.conn.commit()
         self.measurements_list.clear()
 
-        return "Baza danych została wyczyszczona"
+        return "Database was cleared"
 
     def delete_measurement_at_date(self, date):
         """Deletes chosen by the user measurement"""

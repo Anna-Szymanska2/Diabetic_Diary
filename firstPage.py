@@ -17,12 +17,12 @@ class FirstPage(QWidget):
         self.list_widget = QListWidget(self)
         string_list = string_measurement_list(return_sorted_chronologically(self.database.measurements_list.copy()))
         self.list_widget.addItems(string_list)
-        sugar_label = QLabel("Poziom cukru: ")
+        sugar_label = QLabel("Sugar level: ")
         self.line_edit = QLineEdit()
-        mode_label = QLabel("Tryb: ")
+        mode_label = QLabel("Mode: ")
         self.combo_box = QComboBox(self)
-        self.combo_box.addItem("Na czczo")
-        self.combo_box.addItem("Po posiłku")
+        self.combo_box.addItem("Fasting")
+        self.combo_box.addItem("After eating")
         self.dateEdit = QDateTimeEdit(QDateTime.currentDateTime())
         self.dateEdit.setMaximumDate(QDate.currentDate())
         self.dateEdit.setMaximumTime(QTime.currentTime())
@@ -33,11 +33,11 @@ class FirstPage(QWidget):
         h_layout.addWidget(mode_label)
         h_layout.addWidget(self.combo_box)
         h_layout.addWidget(self.dateEdit)
-        button_add_item = QPushButton("Dodaj pomiar")
+        button_add_item = QPushButton("Add measurement")
         button_add_item.clicked.connect(self.add_item)
-        button_delete_item = QPushButton("Usuń zaznaczony pomiar")
+        button_delete_item = QPushButton("Delete selected measurement")
         button_delete_item.clicked.connect(self.delete_item)
-        button_delete_all = QPushButton("Usuń wszystkie pomiary")
+        button_delete_all = QPushButton("Delete all measurements")
         button_delete_all.clicked.connect(self.delete_all_items)
         v_layout = QVBoxLayout()
         v_layout.addLayout(h_layout)
@@ -59,9 +59,9 @@ class FirstPage(QWidget):
         mode = self.combo_box.currentIndex()
 
         if mode == 1:
-            mode = "po jedzeniu"
+            mode = "after eating"
         else:
-            mode = "na czczo"
+            mode = "fasting"
         try:
             s = self.database.add_new_measurement(sugar, date, mode)
             if len(string_measurement_list(self.database.measurements_list.copy())) > length:
@@ -70,7 +70,7 @@ class FirstPage(QWidget):
                 self.list_widget.addItems(string_list)
             self.show_message_box(" ", s)
         except ValueError:
-            self.show_message_box("Błąd", "Podałeś dane w nieodpowiednim formacie")
+            self.show_message_box("Error", "Wrong format of data")
 
     def delete_all_items(self):
         """ Deleting all measurements from the database
@@ -79,7 +79,7 @@ class FirstPage(QWidget):
         """
 
         ret = QMessageBox.question(self, "Message Title",
-                                   "Czy jesteś pewnien, że chcesz usunąć wszytkie pomiary?",
+                                   "Are you sure you want to delete all measurements?",
                                    QMessageBox.Ok | QMessageBox.Cancel)
         if ret == QMessageBox.Ok:
             s = self.database.clear_all_measurements()
